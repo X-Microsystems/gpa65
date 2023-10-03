@@ -1,0 +1,28 @@
+    /* Labels */
+    fprintf(f, "[USER]\n");
+    scopeList = cc65_get_scopelist(Info);
+    for(int scopeIndex = 0; scopeIndex < scopeList->count; scopeIndex++) {
+ //       fprintf(f, "\n#Scope ID %d, %s\n", scopeList->data[scopeIndex].scope_id, scopeList->data[scopeIndex].scope_name);
+
+        symbolList = cc65_symbol_byscope(Info, scopeIndex);
+        for(int symbolIndex = 0; symbolIndex < symbolList->count; symbolIndex++) {
+
+            /* Only add to the USER list if type is Label */
+            if(symbolList->data[symbolIndex].symbol_type == CC65_SYM_LABEL) {
+
+                /* If the scope has a name, prepend the symbol name */
+                if(*(scopeList->data[scopeIndex].scope_name) != '\0') {
+                    fprintf(f, "%s/", scopeList->data[scopeIndex].scope_name);
+                }
+
+                /* If the symbol has a parent symbol (is a cheap local), prepend the name */
+                unsigned symbolParent = symbolList->data[symbolIndex].parent_id;
+                if(symbolParent != CC65_INV_ID) {
+                    fprintf(f, "%s/", symbolList->data[symbolParent].symbol_name);
+                }
+
+                fprintf(f, "%-24s%ld\n", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
+            }
+        }
+    }
+    fprintf(f, "\n");

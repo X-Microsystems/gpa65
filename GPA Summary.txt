@@ -1,0 +1,60 @@
+General-Purpose ASCII (GPA) Record Format Summary
+Format
+[SECTIONS]
+section_name  start..end  attribute
+
+[FUNCTIONS]
+func_name  start..end
+
+[USER]
+sym_name   value                    base
+sym_name   start_value   [size]     base
+sym_name   start_value..end_value   base
+
+[VARIABLES]
+var_name   start [size]
+var_name   start..end
+
+[SOURCE LINES]
+File: file_name
+line#  address
+
+[START ADDRESS]
+address
+
+#comment text
+Lines without a preceding header are assumed to be symbol definitions in one of the [USER] formats.
+
+Example
+This is an example GPA file that contains several different kinds of records.
+
+[SECTIONS]
+prog     00001000..0000101F
+data     40002000..40009FFF
+common   FFFF0000..FFFF1000
+
+[FUNCTIONS]
+main     00001000..00001009
+test     00001010..0000101F
+
+[USER]
+bdontcare    00x1     binary
+hvalue       00EF     hex
+drange       0..99    decimal
+srange      -23  20   signed decimal   # The 20 is a decimal value for size.
+
+[VARIABLES]
+total    40002000  4
+value    40008000  4
+
+[SOURCE LINES]
+File: main.c
+10       00001000
+11       00001002
+14       0000100A
+22       0000101E
+
+File: test.c
+ 5       00001010
+ 7       00001012
+11       0000101A
