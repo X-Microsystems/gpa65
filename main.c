@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
     fprintf(f, "### GPA Symbol File for %s ###\r\n\r\n", debugFile);
 
 
-    /* Segments */
+    /** Segments **/
     fprintf(f, "[SECTIONS]\r\n");
     segmentList = cc65_get_segmentlist(Info);
     for(int segmentIndex = 0; segmentIndex < segmentList->count; segmentIndex++) {
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     }
     fprintf(f, "\r\n");
 
-    /* Procedures and defined Scopes */
+    /** Procedures and defined Scopes **/
     scopeList = cc65_get_scopelist(Info);
     fprintf(f, "[FUNCTIONS]\r\n");
     scopeList = cc65_get_scopelist(Info);
@@ -155,45 +155,32 @@ int main(int argc, char *argv[]) {
 
 
 
-
-
-    /* Labels */
+    /** Labels **/
     fprintf(f, "[USER]\r\n");
-    scopeList = cc65_get_scopelist(Info);
-    for(int scopeIndex = 0; scopeIndex < scopeList->count; scopeIndex++) {
-//       fprintf(f, "\r\n#Scope ID %d, %s\r\n", scopeList->data[scopeIndex].scope_id, scopeList->data[scopeIndex].scope_name);
+    symbolList = cc65_symbol_inrange(Info, 0x0000, 0xFFFF);
+    for(int symbolIndex = 0; symbolIndex < symbolList->count; symbolIndex++) {
 
-        symbolList = cc65_symbol_byscope(Info, scopeIndex);
-        for(int symbolIndex = 0; symbolIndex < symbolList->count; symbolIndex++) {
-
-            /* Only add to the USER list if type is Label */
-            if(symbolList->data[symbolIndex].symbol_type == CC65_SYM_LABEL) {
-
-                /* If the scope has a name, prepend the symbol name */
-                if(*(scopeList->data[scopeIndex].scope_name) != '\0') {
-                    fprintf(f, "%s/", scopeList->data[scopeIndex].scope_name);
+        /* Determine whether the symbol is a scope */
+        int scopeSymbol = 0;
+        scopeList = cc65_scope_byname(Info, symbolList->data[symbolIndex].symbol_name);
+        if(scopeList != 0) {
+            for(int scopeIndex = 0; scopeIndex < scopeList->count; scopeIndex++) {
+                if(scopeList->data[scopeIndex].symbol_id == symbolList->data[symbolIndex].symbol_id) {
+                    scopeSymbol = 1;
                 }
-
-                /* If the symbol has a parent symbol (is a cheap local), prepend the name */
-                unsigned symbolParent = symbolList->data[symbolIndex].parent_id;
-                if(symbolParent != CC65_INV_ID) {
-                    fprintf(f, "%s/", symbolList->data[symbolParent].symbol_name);
-                }
-
-                fprintf(f, "%-24s%06x\r\n", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
             }
         }
+
+        fprintf(f, "%-24s%06lx", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
+        if(scopeSymbol == 0 && symbolList->data[symbolIndex].symbol_size > 1) {
+            fprintf(f, " %lx", symbolList->data[symbolIndex].symbol_size);    //Don't add a size if the symbol is a scope
+        }
+        fprintf(f, "\r\n");
     }
-    fprintf(f, "\r\n");
-
-
-
-
-
 
 
     /** Source lines **/
-    fprintf(f, "[SOURCE LINES]\r\n");
+    fprintf(f, "\r\n[SOURCE LINES]");
     sourceList = cc65_get_sourcelist(Info);
     static int lineCount = 0;
     static int lineNumber = 0;

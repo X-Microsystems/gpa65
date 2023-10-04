@@ -35,174 +35,184 @@ XM7SEG_ERRORCODE        001ab6..001ae9
 XM7SEG_WRITE            001aea..001af4
 
 [USER]
-CF_BUFFER               001af5
-CF_BUFFERPOINTER        000001
-CF_INIT                 00103e
-CF_LBA                  000003
-CF_READ_SECTOR          001160
-CF_SENSE                001078
-LOAD_LBA                0010ff
-LOOP_BUSY               001078
-LOOP_CMD_RDY            0010a1
-LOOP_DAT_RDY            0010d2
-RD_CMD                  001127
+CF_BUFFERPOINTER        000001 2
+CF_LBA                  000003 4
 TIMEOUT                 000007
-CF_INIT/L0                      00103f
-LOOP_BUSY/L0                      00108b
-LOOP_BUSY/RETURN                  0010a0
-LOOP_CMD_RDY/L0                      0010b6
-LOOP_CMD_RDY/RETURN                  0010cd
-LOOP_DAT_RDY/L0                      0010e7
-LOOP_DAT_RDY/RETURN                  0010fe
-RD_CMD/RD_SECT                 00114f
-BOOTBLOCK               000008
-BYTESPERCLUSTER         000040
-BYTESPERSECTOR          000018
-CURRENTCLUSTER          000050
-CURRENTSECTOR           000054
-DATASTART               00003c
-DESTSIZE                00004e
-DUMMY                   000014
-FATCOPIES               000024
-FATSTART                000030
-FAT_DETECT              0012f6
-FAT_FIND                0013a4
-FAT_INIT                00116d
-FAT_LOAD                001461
-FAT_LOAD_STREAM         0015f6
+BOOTBLOCK               000008 4
+TMP1                    00000c 4
+TMP2                    000010 4
+DUMMY                   000014 4
+BYTESPERSECTOR          000018 4
+SECTORSPERCLUSTER       00001c 4
+RESERVEDSECTORS         000020 4
+FATCOPIES               000024 4
+ROOTENTRIES             000028 4
+SECTORSPERFAT           00002c 4
+FATSTART                000030 4
+ROOTSTART               000034 4
+ROOTSIZE                000038 4
+DATASTART               00003c 4
+BYTESPERCLUSTER         000040 4
+STARTCLUSTER            000044 4
+FILESIZE                000048 4
+FILEDEST                00004c 2
+DESTSIZE                00004e 2
+CURRENTCLUSTER          000050 4
+CURRENTSECTOR           000054 4
+REMAININGSECTORS        000058 4
+REMAININGBYTES          00005c 2
 FAT_STATUS              00005e
-FAT_VALIDATE_CLUSTER    001380
-FAT_VALIDATE_FILESIZE   00143d
-FILEDEST                00004c
-FILENAME                00005f
-FILESIZE                000048
-REMAININGBYTES          00005c
-REMAININGSECTORS        000058
-RESERVEDSECTORS         000020
-ROOTENTRIES             000028
-ROOTSIZE                000038
-ROOTSTART               000034
-SECTORSPERCLUSTER       00001c
-SECTORSPERFAT           00002c
-STARTCLUSTER            000044
-S_FAT16                 001af7
-TMP1                    00000c
-TMP2                    000010
-FAT_INIT/FAT_INIT_BEGIN          001175
-FAT_INIT/RETURN                  0012f5
-FAT_DETECT/CHECK_FAT               00130b
-FAT_DETECT/CHECK_FAT_LOOP          00131c
-FAT_DETECT/CHECK_MBR               00133c
-FAT_DETECT/FOUND_FAT               001373
-FAT_DETECT/FOUND_FAT_MBR           001353
-FAT_DETECT/FOUND_FAT_MBR_LOOP      001364
-FAT_DETECT/NO_FAT                  001329
-FAT_VALIDATE_CLUSTER/INVALID_CLUSTER         00139a
-FAT_VALIDATE_CLUSTER/VALID_CLUSTER           00139f
-FAT_VALIDATE_CLUSTER/VS00                    001392
-FAT_VALIDATE_CLUSTER/VSFF                    001388
-FAT_FIND/FILENAME_COMPARE        001403
-FAT_FIND/FOUND_FILE              00141a
-FAT_FIND/L0                      0013c9
-FAT_FIND/L1                      00142e
-FAT_FIND/NEXTENTRY               0013e5
-FAT_FIND/NEXTSECTOR              0013b8
-FAT_FIND/NOT_FOUND               00140f
-FAT_FIND/READENTRY               0013fa
-FAT_FIND/SECTORLOOP              0013d6
-FAT_VALIDATE_FILESIZE/GOODSIZE                001457
-FAT_VALIDATE_FILESIZE/L0                      00144f
-FAT_VALIDATE_FILESIZE/OVERSIZE                00145c
-FAT_LOAD/GOOD_FILESIZE           001467
-FAT_LOAD/L0                      00149c
-FAT_LOAD/L1                      0014df
-FAT_LOAD/L2                      001521
-FAT_LOAD/L3                      00152c
-FAT_LOAD/LASTSECTOR              0015b5
-FAT_LOAD/LS1                     0015bd
-FAT_LOAD/NEXTCLUSTER             00152f
-FAT_LOAD/RETURN                  0015f5
-FAT_LOAD/RETURN_OK               0015f1
-FAT_LOAD/VALID_START             001477
-FAT_LOAD_STREAM/L0                      00162b
-FAT_LOAD_STREAM/L1                      00166e
-FAT_LOAD_STREAM/L2                      0016b0
-FAT_LOAD_STREAM/L3                      0016b7
-FAT_LOAD_STREAM/LASTSECTOR              001740
-FAT_LOAD_STREAM/LS1                     001748
-FAT_LOAD_STREAM/NEXTCLUSTER             0016ba
-FAT_LOAD_STREAM/RETURN                  001780
-FAT_LOAD_STREAM/RETURN_OK               00177c
-FAT_LOAD_STREAM/VALID_START             001606
-M32PTR1                 00006a
-M32PTR2                 00006c
-M32PTR3                 00006e
-M32PTR4                 000070
-MATH_ADD32              001781
-MATH_DIV32              0017f8
-MATH_MUL32              0017af
-MATH_SUB32              001798
-TMP1                    000072
-TMP2                    000076
-TMP3                    00007a
-TMP4                    00007e
-MATH_ADD32/LOOP                    001787
-MATH_SUB32/LOOP                    00179e
-MATH_MUL32/LOOP                    0017c6
-MATH_MUL32/LOOP_ADD                0017d4
-MATH_MUL32/LOOP_INIT               0017b3
-MATH_MUL32/SKIP_ADD                0017e3
-MATH_DIV32/DIVLOOP                 001813
-MATH_DIV32/LOOP_COPY_RESULT        001851
-MATH_DIV32/LOOP_INIT               0017fd
-MATH_DIV32/LOOP_SUBTRACT           001827
-MATH_DIV32/SKIP                    00184c
-MOVEDOWN                001864
-MOVESTREAM              00188b
-MOVE_FROM               000082
-MOVE_SIZE               000086
-MOVE_TO                 000084
-ZERO_FILL               0018b8
-MOVEDOWN/MD1                     00186d
-MOVEDOWN/MD2                     00187b
-MOVEDOWN/MD3                     00187f
-MOVEDOWN/MD4                     001887
-MOVESTREAM/MD1                     001894
-MOVESTREAM/MD2                     0018a4
-MOVESTREAM/MD3                     0018a8
-MOVESTREAM/MD4                     0018b4
-ZERO_FILL/L1                      0018c2
-ZERO_FILL/L2                      0018cc
-ZERO_FILL/L3                      0018d0
-ZERO_FILL/L4                      0018d6
-ERROR_HALT              001039
-FRAME_COUNT             001af5
-H_INT                   001ab5
-LOAD_LOGO               001988
-LOCAL-MACRO_SYMBOL-0000 001987
-LOCAL-MACRO_SYMBOL-0001 001975
-LOGO_DATA               001b38
-PALETTE                 001b00
-PALETTE_INIT            001923
-PATTERN_INIT            00193a
-S_LOGO                  001b2c
-S_PAGE0                 001b20
-VDP_INIT                0018da
-VDP_ISR                 001a81
-V_INT                   001aac
+FILENAME                00005f b
+M32PTR1                 00006a 2
+M32PTR2                 00006c 2
+M32PTR3                 00006e 2
+M32PTR4                 000070 2
+TMP1                    000072 4
+TMP2                    000076 4
+TMP3                    00007a 4
+TMP4                    00007e 4
+MOVE_FROM               000082 2
+MOVE_TO                 000084 2
+MOVE_SIZE               000086 2
+XM7SEG_ADDRESS          000088 2
+XM7SEG_BUFFER           00008a 4
 _INIT                   001000
 _MAIN                   001035
-XM7SEG_ADDRESS          000088
-XM7SEG_BUFFER           00008a
+ERROR_HALT              001039
+CF_INIT                 00103e
+L0                      00103f
+CF_SENSE                001078
+LOOP_BUSY               001078
+L0                      00108b 3
+RETURN                  0010a0
+LOOP_CMD_RDY            0010a1
+L0                      0010b6 3
+RETURN                  0010cd
+LOOP_DAT_RDY            0010d2
+L0                      0010e7 3
+RETURN                  0010fe
+LOAD_LBA                0010ff
+RD_CMD                  001127
+RD_SECT                 00114f
+CF_READ_SECTOR          001160
+FAT_INIT                00116d
+FAT_INIT_BEGIN          001175
+RETURN                  0012f5
+FAT_DETECT              0012f6
+CHECK_FAT               00130b
+CHECK_FAT_LOOP          00131c
+NO_FAT                  001329
+CHECK_MBR               00133c
+FOUND_FAT_MBR           001353
+FOUND_FAT_MBR_LOOP      001364
+FOUND_FAT               001373
+FAT_VALIDATE_CLUSTER    001380
+VSFF                    001388 2
+VS00                    001392 2
+INVALID_CLUSTER         00139a
+VALID_CLUSTER           00139f
+FAT_FIND                0013a4
+NEXTSECTOR              0013b8
+L0                      0013c9 3
+SECTORLOOP              0013d6
+NEXTENTRY               0013e5
+READENTRY               0013fa
+FILENAME_COMPARE        001403
+NOT_FOUND               00140f
+FOUND_FILE              00141a
+L1                      00142e 2
+FAT_VALIDATE_FILESIZE   00143d
+L0                      00144f 2
+GOODSIZE                001457
+OVERSIZE                00145c
+FAT_LOAD                001461
+GOOD_FILESIZE           001467
+VALID_START             001477
+L0                      00149c
+L1                      0014df
+L2                      001521 2
+L3                      00152c
+NEXTCLUSTER             00152f
+LASTSECTOR              0015b5
+LS1                     0015bd
+RETURN_OK               0015f1
+RETURN                  0015f5
+FAT_LOAD_STREAM         0015f6
+VALID_START             001606
+L0                      00162b
+L1                      00166e
+L2                      0016b0
+L3                      0016b7
+NEXTCLUSTER             0016ba
+LASTSECTOR              001740
+LS1                     001748
+RETURN_OK               00177c
+RETURN                  001780
+MATH_ADD32              001781
+LOOP                    001787
+MATH_SUB32              001798
+LOOP                    00179e
+MATH_MUL32              0017af
+LOOP_INIT               0017b3
+LOOP                    0017c6
+LOOP_ADD                0017d4
+SKIP_ADD                0017e3
+MATH_DIV32              0017f8
+LOOP_INIT               0017fd
+DIVLOOP                 001813
+LOOP_SUBTRACT           001827
+SKIP                    00184c
+LOOP_COPY_RESULT        001851
+MOVEDOWN                001864
+MD1                     00186d 2
+MD2                     00187b 2
+MD3                     00187f 2
+MD4                     001887
+MOVESTREAM              00188b
+MD1                     001894 2
+MD2                     0018a4 2
+MD3                     0018a8 2
+MD4                     0018b4
+ZERO_FILL               0018b8
+L1                      0018c2 2
+L2                      0018cc 2
+L3                      0018d0 2
+L4                      0018d6
+VDP_INIT                0018da
+PALETTE_INIT            001923
+@1                      00192f 3
+PATTERN_INIT            00193a
+LOCAL-MACRO_SYMBOL-0001 001975
+LOCAL-MACRO_SYMBOL-0000 001987
+LOAD_LOGO               001988
+@MD1                    0019ea
+@MD1_1                  001a09
+@MD2                    001a2c 2
+@MD3                    001a30
+@MD3_1                  001a4f
+@1                      001a6e
+@MD4                    001a6e
+VDP_ISR                 001a81
+@1                      001a96
+@2                      001aab
+V_INT                   001aac
+@RETURN                 001ab4
+H_INT                   001ab5
 XM7SEG_ERRORCODE        001ab6
+L0                      001acf 2
+FAIL                    001add
+SUCCESS                 001ae6
 XM7SEG_WRITE            001aea
-XM7SEG_ERRORCODE/FAIL                    001add
-XM7SEG_ERRORCODE/L0                      001acf
-XM7SEG_ERRORCODE/SUCCESS                 001ae6
-XM7SEG_WRITE/L0                      001aec
+L0                      001aec 3
+CF_BUFFER               001af5 2
+FRAME_COUNT             001af5
+S_FAT16                 001af7 9
+PALETTE                 001b00
+S_PAGE0                 001b20 c
+S_LOGO                  001b2c c
+LOGO_DATA               001b38 2558
 
 [SOURCE LINES]
-
 File: ./CFDRIVER.S
 34        1
 35        3
