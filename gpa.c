@@ -31,9 +31,36 @@ void gpa_print_labels(FILE* f, cc65_dbginfo Info) {
             }
         }
 
-        fprintf(f, "%-24s%06lx", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
+        /* Prepend the label name for clarity where needed (cheap locals and duplicates */
+        const cc65_symbolinfo* symbolDuplicates = cc65_symbol_byname(Info, symbolList->data[symbolIndex].symbol_name);
+        if(symbolList->data[symbolIndex].parent_id != CC65_INV_ID) {
+            /* If the symbol is a cheap local */
+            fprintf(f, "%s/", cc65_symbol_byid(Info, symbolList->data[symbolIndex].parent_id)->data[0].symbol_name);
+        } else if(symbolDuplicates->count > 1) {
+            /* If the symbol is a duplicate */
+            int isDuplicate = 0;
+            for(int i = 0; i < symbolDuplicates->count; i++) {
+                if(symbolDuplicates->data[i].symbol_id != symbolList->data[symbolIndex].symbol_id && symbolDuplicates->data[i].symbol_type != CC65_SYM_IMPORT) {
+                    isDuplicate = 1;
+                }
+            }
+
+            if(isDuplicate == 1) {
+                if(*cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].scope_name != '\0') {
+                    /* If the parent scope has a name, print it */
+                    fprintf(f, "%s/", cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].scope_name);
+                } else {
+                    /* If the parent scope has no name, print the source file name of the span's parent module instead */
+                    fprintf(f, "%s/", cc65_source_byid(Info, cc65_module_byid(Info, cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].module_id)->data[0].source_id)->data[0].source_name);
+                }
+            }
+        }
+
+        /* Print the name and address */
+        fprintf(f, "%s   %06lx", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
+        /* Print the size if the symbol is not a scope */
         if(scopeSymbol == 0 && symbolList->data[symbolIndex].symbol_size > 1) {
-            fprintf(f, " %x", symbolList->data[symbolIndex].symbol_size);    //Don't add a size if the symbol is a scope
+            fprintf(f, " %x", symbolList->data[symbolIndex].symbol_size);
         }
         fprintf(f, "\r\n");
     }
@@ -55,12 +82,11 @@ void gpa_print_scopes(FILE* f, cc65_dbginfo Info) {
     scopeList = cc65_get_scopelist(Info);
     fprintf(f, "[FUNCTIONS]\r\n");
     scopeList = cc65_get_scopelist(Info);
-    static unsigned scopeSize = 0;
+    unsigned scopeSize = 0;
     for(int scopeIndex = 0; scopeIndex < scopeList->count; scopeIndex++) {
         /* Scope names must be collected from the attached symbol */
         symbolList = cc65_symbol_byid(Info, scopeList->data[scopeIndex].symbol_id);
         /* Only add a scope to the list if it's a procedure type with a valid range and name */
-        //if(scopeList->data[scopeIndex].scope_type == CC65_SCOPE_SCOPE && scopeList->data[scopeIndex].scope_size > 0 && scopeList->data[scopeIndex].scope_name != '\0') {
         if(scopeList->data[scopeIndex].scope_type == CC65_SCOPE_SCOPE && scopeList->data[scopeIndex].scope_size > 0 && scopeList->data[scopeIndex].scope_name) {
             scopeSize = (symbolList->data[0].symbol_value + scopeList->data[scopeIndex].scope_size - 1);
             fprintf(f, "%-24s%06lx..%06x\r\n",scopeList->data[scopeIndex].scope_name, symbolList->data[0].symbol_value, scopeSize);

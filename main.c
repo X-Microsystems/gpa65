@@ -18,11 +18,11 @@ static char outFile[100] = "out.sym";
 
 
 /* Debug file data */
-static cc65_dbginfo             Info = 0;
+static cc65_dbginfo Info = 0;
 
 
 /* Error and warning counters */
-static unsigned FileErrors   = 0;
+static unsigned FileErrors = 0;
 static unsigned FileWarnings = 0;
 
 
