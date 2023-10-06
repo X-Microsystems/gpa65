@@ -1,9 +1,0 @@
-Sections:
-When at least one section is defined, source lines are only correlated within defined section address ranges. When no sections are defined, all source line addresses are correlated.
-
-Source Lines:
-There is quite a bit of odd behavior here.
-
-1. Source lines must be presented in order of address. Each new source line seems to assume that all higher addresses are associated to it. Then, loading a higher address afterward will do the same.
-
-2. Something strange has been observed with the last line of one file definition, before the next file definition starting with that same address. For some reason the later address won't take. However, if the last two addresses of the definition are overwritten by the next file, it doesn't happen. The workaround in the case of GPA65 is to just comment out superseded addresses so the LPA software doesn't have to decide what to do. The addresses are left in the file to allow the user to see the chain of sources where multiple lines are associated with an address.
