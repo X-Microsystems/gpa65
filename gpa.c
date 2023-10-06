@@ -1,3 +1,32 @@
+/*
+gpa.c
+GPA symbol conversion functions
+
+MIT License
+
+Copyright (c) 2023 X-Microsystems
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -138,7 +167,8 @@ struct gpa_sourcedata {
 static int compare_sourcedata(const void *a, const void *b) {
     struct gpa_sourcedata *input_a = (gpa_sourcedata*)a;
     struct gpa_sourcedata *input_b = (gpa_sourcedata*)b;
-    if (input_a->address_start > input_b->address_start) return 1;                  //Sort by address
+    /* Sort by address */
+    if (input_a->address_start > input_b->address_start) return 1;
     if (input_a->address_start < input_b->address_start) return -1;
 
     int lineType(cc65_line_type l) {
@@ -153,10 +183,11 @@ static int compare_sourcedata(const void *a, const void *b) {
             return 2;
         }
     }
-
-    if (lineType(input_a->line_type) > lineType(input_b->line_type)) return 1;      //Sort by line type
+    /* Sort by line type */
+    if (lineType(input_a->line_type) > lineType(input_b->line_type)) return 1;
     if (lineType(input_a->line_type) < lineType(input_b->line_type)) return -1;
-    if (input_a->count > input_b->count) return 1;                                  //Sort by macro nesting depth
+    /* Sort by macro nesting depth */
+    if (input_a->count > input_b->count) return 1;
     if (input_a->count < input_b->count) return -1;
     return 0;
 }
@@ -200,10 +231,12 @@ void gpa_print_sources(FILE* f, cc65_dbginfo Info) {
 
     /* Output the source lines */
     for(lineNumber = 0; lineNumber < lineCount; lineNumber++) {
-        if(gpaSources[lineNumber - 1].source_name != gpaSources[lineNumber].source_name || lineNumber == 0) {       //Don't print the filename if the previous line was from the same file
+        /*Don't print the filename if the previous line was from the same file */
+        if(gpaSources[lineNumber - 1].source_name != gpaSources[lineNumber].source_name || lineNumber == 0) {
             fprintf(f, "\r\nFile: %s\r\n", gpaSources[lineNumber].source_name);
         }
-        if(lineNumber < lineCount - 1) {                                                                            //Comment superseded lines, ignore the last line
+        /* Comment superseded lines, ignore the last line */
+        if(lineNumber < lineCount - 1) {
             if(gpaSources[lineNumber].address_start == gpaSources[lineNumber + 1].address_start) {
                 fprintf(f, "#");
             }
