@@ -86,10 +86,10 @@ void gpa_print_labels(FILE* f, cc65_dbginfo Info) {
         }
 
         /* Print the name and address */
-        fprintf(f, "%s   %06lx", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
+        fprintf(f, "%s   %06lX", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
         /* Print the size if the symbol is not a scope */
         if(scopeSymbol == 0 && symbolList->data[symbolIndex].symbol_size > 1) {
-            fprintf(f, " %x", symbolList->data[symbolIndex].symbol_size);
+            fprintf(f, " %X", symbolList->data[symbolIndex].symbol_size);
         }
         fprintf(f, "\r\n");
     }
@@ -118,7 +118,7 @@ void gpa_print_scopes(FILE* f, cc65_dbginfo Info) {
         /* Only add a scope to the list if it's a procedure type with a valid range and name */
         if(scopeList->data[scopeIndex].scope_type == CC65_SCOPE_SCOPE && scopeList->data[scopeIndex].scope_size > 0 && scopeList->data[scopeIndex].scope_name) {
             scopeSize = (symbolList->data[0].symbol_value + scopeList->data[scopeIndex].scope_size - 1);
-            fprintf(f, "%-24s%06lx..%06x\r\n",scopeList->data[scopeIndex].scope_name, symbolList->data[0].symbol_value, scopeSize);
+            fprintf(f, "%-24s%06lX..%06X\r\n",scopeList->data[scopeIndex].scope_name, symbolList->data[0].symbol_value, scopeSize);
         }
     }
     fprintf(f, "\r\n");
@@ -138,7 +138,7 @@ void gpa_print_segments(FILE* f, cc65_dbginfo Info) {
     fprintf(f, "[SECTIONS]\r\n");
     segmentList = cc65_get_segmentlist(Info);
     for(int segmentIndex = 0; segmentIndex < segmentList->count; segmentIndex++) {
-        fprintf(f, "%-24s%06x..%06x\r\n",segmentList->data[segmentIndex].segment_name, segmentList->data[segmentIndex].segment_start, (segmentList->data[segmentIndex].segment_start + segmentList->data[segmentIndex].segment_size));
+        fprintf(f, "%-24s%06X..%06X\r\n",segmentList->data[segmentIndex].segment_name, segmentList->data[segmentIndex].segment_start, (segmentList->data[segmentIndex].segment_start + segmentList->data[segmentIndex].segment_size));
     }
     fprintf(f, "\r\n");
 }
@@ -241,7 +241,7 @@ void gpa_print_sources(FILE* f, cc65_dbginfo Info) {
                 fprintf(f, "#");
             }
         }
-        fprintf(f, "%-10d%lx\r\n", gpaSources[lineNumber].source_line, gpaSources[lineNumber].address_start);
+        fprintf(f, "%-10d%lX\r\n", gpaSources[lineNumber].source_line, gpaSources[lineNumber].address_start);
     }
     fprintf(f, "\r\n");
 }
