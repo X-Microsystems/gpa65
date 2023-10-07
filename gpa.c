@@ -34,6 +34,7 @@ SOFTWARE.
 #include "dbginfo.h"
 
 
+const unsigned int columnWidth = 40;
 
 /*****************************************************************************/
 /*                                   Labels                                  */
@@ -48,6 +49,7 @@ void gpa_print_labels(FILE* f, cc65_dbginfo Info) {
     fprintf(f, "[USER]\r\n");
     symbolList = cc65_symbol_inrange(Info, 0x0000, 0xFFFF);
     for(int symbolIndex = 0; symbolIndex < symbolList->count; symbolIndex++) {
+        int column = columnWidth; /* Column counter for output alignment */
 
         /* Determine whether the symbol is a scope */
         int scopeSymbol = 0;
@@ -64,7 +66,7 @@ void gpa_print_labels(FILE* f, cc65_dbginfo Info) {
         const cc65_symbolinfo* symbolDuplicates = cc65_symbol_byname(Info, symbolList->data[symbolIndex].symbol_name);
         if(symbolList->data[symbolIndex].parent_id != CC65_INV_ID) {
             /* If the symbol is a cheap local */
-            fprintf(f, "%s/", cc65_symbol_byid(Info, symbolList->data[symbolIndex].parent_id)->data[0].symbol_name);
+            column -= fprintf(f, "%s/", cc65_symbol_byid(Info, symbolList->data[symbolIndex].parent_id)->data[0].symbol_name);
         } else if(symbolDuplicates->count > 1) {
             /* If the symbol is a duplicate */
             int isDuplicate = 0;
@@ -77,16 +79,16 @@ void gpa_print_labels(FILE* f, cc65_dbginfo Info) {
             if(isDuplicate == 1) {
                 if(*cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].scope_name != '\0') {
                     /* If the parent scope has a name, print it */
-                    fprintf(f, "%s/", cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].scope_name);
+                    column -= fprintf(f, "%s/", cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].scope_name);
                 } else {
                     /* If the parent scope has no name, print the source file name of the span's parent module instead */
-                    fprintf(f, "%s/", cc65_source_byid(Info, cc65_module_byid(Info, cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].module_id)->data[0].source_id)->data[0].source_name);
+                    column -= fprintf(f, "%s/", cc65_source_byid(Info, cc65_module_byid(Info, cc65_scope_byid(Info, symbolList->data[symbolIndex].scope_id)->data[0].module_id)->data[0].source_id)->data[0].source_name);
                 }
             }
         }
 
         /* Print the name and address */
-        fprintf(f, "%s   %06lX", symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
+        fprintf(f, "%-*s %06lX", column, symbolList->data[symbolIndex].symbol_name, symbolList->data[symbolIndex].symbol_value);
         /* Print the size if the symbol is not a scope */
         if(scopeSymbol == 0 && symbolList->data[symbolIndex].symbol_size > 1) {
             fprintf(f, " %X", symbolList->data[symbolIndex].symbol_size);
@@ -118,7 +120,7 @@ void gpa_print_scopes(FILE* f, cc65_dbginfo Info) {
         /* Only add a scope to the list if it's a procedure type with a valid range and name */
         if(scopeList->data[scopeIndex].scope_type == CC65_SCOPE_SCOPE && scopeList->data[scopeIndex].scope_size > 0 && scopeList->data[scopeIndex].scope_name) {
             scopeSize = (symbolList->data[0].symbol_value + scopeList->data[scopeIndex].scope_size - 1);
-            fprintf(f, "%-24s%06lX..%06X\r\n",scopeList->data[scopeIndex].scope_name, symbolList->data[0].symbol_value, scopeSize);
+            fprintf(f, "%-*s %06lX..%06X\r\n", columnWidth, scopeList->data[scopeIndex].scope_name, symbolList->data[0].symbol_value, scopeSize);
         }
     }
     fprintf(f, "\r\n");
@@ -131,14 +133,30 @@ void gpa_print_scopes(FILE* f, cc65_dbginfo Info) {
 /*****************************************************************************/
 
 
+/* Compare segment addresses */
+static int compare_segmentdata(const void *a, const void *b) {
+    struct cc65_segmentdata *input_a = (cc65_segmentdata*)a;
+    struct cc65_segmentdata *input_b = (cc65_segmentdata*)b;
+    /* Sort by address */
+    if (input_a->segment_start > input_b->segment_start) return 1;
+    if (input_a->segment_start < input_b->segment_start) return -1;
+    return 0;
+}
+
+
 
 void gpa_print_segments(FILE* f, cc65_dbginfo Info) {
-    const cc65_segmentinfo*  segmentList;
+    cc65_segmentinfo*  segmentList;
 
     fprintf(f, "[SECTIONS]\r\n");
+    /* Get a list of all segments and sort them by address. Generates a compiler warning because the function returns a const type. */
     segmentList = cc65_get_segmentlist(Info);
+    qsort(segmentList->data, segmentList->count, sizeof(cc65_segmentdata), compare_segmentdata);
+
     for(int segmentIndex = 0; segmentIndex < segmentList->count; segmentIndex++) {
-        fprintf(f, "%-24s%06X..%06X\r\n",segmentList->data[segmentIndex].segment_name, segmentList->data[segmentIndex].segment_start, (segmentList->data[segmentIndex].segment_start + segmentList->data[segmentIndex].segment_size));
+        if(strcmp(segmentList->data[segmentIndex].segment_name, "NULL") != 0) {
+            fprintf(f, "%-*s %06X..%06X\r\n", columnWidth, segmentList->data[segmentIndex].segment_name, segmentList->data[segmentIndex].segment_start, (segmentList->data[segmentIndex].segment_start + (segmentList->data[segmentIndex].segment_size - 1)));
+        }
     }
     fprintf(f, "\r\n");
 }
@@ -236,12 +254,13 @@ void gpa_print_sources(FILE* f, cc65_dbginfo Info) {
             fprintf(f, "\r\nFile: %s\r\n", gpaSources[lineNumber].source_name);
         }
         /* Comment superseded lines, ignore the last line */
+        int column = columnWidth;
         if(lineNumber < lineCount - 1) {
             if(gpaSources[lineNumber].address_start == gpaSources[lineNumber + 1].address_start) {
-                fprintf(f, "#");
+                column -= fprintf(f, "#");
             }
         }
-        fprintf(f, "%-10d%lX\r\n", gpaSources[lineNumber].source_line, gpaSources[lineNumber].address_start);
+        fprintf(f, "%-*d %06lX\r\n", column, gpaSources[lineNumber].source_line, gpaSources[lineNumber].address_start);
     }
     fprintf(f, "\r\n");
 }
