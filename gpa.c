@@ -154,7 +154,7 @@ void gpa_print_segments(FILE* f, cc65_dbginfo Info) {
     qsort(segmentList->data, segmentList->count, sizeof(cc65_segmentdata), compare_segmentdata);
 
     for(int segmentIndex = 0; segmentIndex < segmentList->count; segmentIndex++) {
-        if(strcmp(segmentList->data[segmentIndex].segment_name, "NULL") != 0) {
+        if(segmentList->data[segmentIndex].segment_size > 0 && strcmp(segmentList->data[segmentIndex].segment_name, "NULL") != 0) {
             fprintf(f, "%-*s %06X..%06X\r\n", columnWidth, segmentList->data[segmentIndex].segment_name, segmentList->data[segmentIndex].segment_start, (segmentList->data[segmentIndex].segment_start + (segmentList->data[segmentIndex].segment_size - 1)));
         }
     }
