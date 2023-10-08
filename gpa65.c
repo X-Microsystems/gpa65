@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
         if(opts.ignoreWarnings == 0) exit(1);
         printf("-w: Ignoring source data warnings.");
     } else {
-        printf("File loaded successfully\n");
+//        printf("File loaded successfully\n");
     }
 
     /* Open the output file */
