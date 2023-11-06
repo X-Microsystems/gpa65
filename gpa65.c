@@ -69,9 +69,7 @@ static void printHelp () {
     printf("  -s        Print Segments  (Sections)\n");
     printf("  -f        Print Scopes    (Functions)\n");
     printf("  -u        Print Labels    (User)\n");
-    printf("  -l        Print Segments  (Source lines)\n");
-
-
+    printf("  -l        Print Lines     (Source lines)\n");
 }
 
 
@@ -158,6 +156,7 @@ static argReturn findArgs(int argc, char* argv[]) {
 static cc65_dbginfo Info = 0;
 
 
+
 /* Error and warning counters */
 static unsigned FileErrors = 0;
 static unsigned FileWarnings = 0;
@@ -206,8 +205,6 @@ int main(int argc, char *argv[]) {
         printf("File loaded with %u warnings\n", FileWarnings);
         if(opts.ignoreWarnings == 0) exit(1);
         printf("-w: Ignoring source data warnings.");
-    } else {
-//        printf("File loaded successfully\n");
     }
 
     /* Open the output file */
