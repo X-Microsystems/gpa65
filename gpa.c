@@ -118,7 +118,9 @@ void gpa_print_scopes(FILE* f, cc65_dbginfo Info) {
         /* Scope names must be collected from the attached symbol */
         symbolList = cc65_symbol_byid(Info, scopeList->data[scopeIndex].symbol_id);
         /* Only add a scope to the list if it's a procedure type with a valid range and name */
-        if(scopeList->data[scopeIndex].scope_type == CC65_SCOPE_SCOPE && scopeList->data[scopeIndex].scope_size > 0 && scopeList->data[scopeIndex].scope_name) {
+        if(scopeList->data[scopeIndex].scope_type == CC65_SCOPE_SCOPE && scopeList->data[scopeIndex].scope_size > 0 && scopeList->data[scopeIndex].scope_name && symbolList) {
+
+//For plain .SCOPE definitions, there is no associated symbol. This is likely the cause of the segfault. Should check for symbols and not print if there is none.
             scopeSize = (symbolList->data[0].symbol_value + scopeList->data[scopeIndex].scope_size - 1);
             fprintf(f, "%-*s %06lX..%06X\r\n", columnWidth, scopeList->data[scopeIndex].scope_name, symbolList->data[0].symbol_value, scopeSize);
         }
